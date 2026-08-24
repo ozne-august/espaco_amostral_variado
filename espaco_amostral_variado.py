@@ -1,19 +1,19 @@
 import random
 from itertools import product
 
-config = {
+Site = {
     "cores": ["azul", "verde", "vermelho", "amarelo"],
     "fontes": ["Arial", "Times New Roman", "Verdana"],
     "plataformas": ["Web", "Mobile"]
 }
 
 # Espaço amostral
-combinacoes = list(product(*config.values()))
+S = list(product(*config.values()))
 print(combinacoes)
 
 # Tamanho do espaço amostral
-print(len(combinacoes))
+tamanhoDeS = print(len(combinacoes))
 
 # Experimento aleatório
-selecao = random.choice(combinacoes)
+resultado = random.choice(combinacoes)
 print(selecao)
