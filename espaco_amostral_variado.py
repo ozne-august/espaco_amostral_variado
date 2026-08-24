@@ -12,7 +12,7 @@ S = list(product(*config.values()))
 print(combinacoes)
 
 # Tamanho do espaço amostral
-tamanhoDeS = print(len(combinacoes))
+tamanho_S = print(len(combinacoes))
 
 # Experimento aleatório
 resultado = random.choice(combinacoes)
