@@ -8,12 +8,14 @@ Site = {
 }
 
 # Espaço amostral
-S = list(product(*config.values()))
+combinacoes = list(product(*Site.values()))
+print("Espaço amostral:")
 print(combinacoes)
 
 # Tamanho do espaço amostral
-tamanho_S = print(len(combinacoes))
+tamanho_S = len(combinacoes)
+print("Tamanho do espaço amostral:", tamanho_S)
 
 # Experimento aleatório
 resultado = random.choice(combinacoes)
-print(selecao)
+print("Seleção aleatória:", resultado)
