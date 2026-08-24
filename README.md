@@ -1,0 +1,1 @@
+# espaco_amostral_variado
