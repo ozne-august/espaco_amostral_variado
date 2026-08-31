@@ -1,19 +1,7 @@
-import random
-from itertools import product
+n = 6  # pessoas na fila
 
-Site = {
-    "cores": ["azul", "verde", "vermelho", "amarelo"],
-    "fontes": ["Arial", "Times New Roman", "Verdana"],
-    "plataformas": ["Web", "Mobile"]
-}
+num_arranjos = 1
+for i in range(1, n + 1):
+    num_arranjos *= i
 
-# Espaço amostral
-S = list(product(*config.values()))
-print(combinacoes)
-
-# Tamanho do espaço amostral
-tamanho_S = print(len(combinacoes))
-
-# Experimento aleatório
-resultado = random.choice(combinacoes)
-print(selecao)
+print(num_arranjos)
