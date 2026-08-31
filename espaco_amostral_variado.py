@@ -1,7 +1,8 @@
-n = 6  # pessoas na fila
+import math
 
-num_arranjos = 1
-for i in range(1, n + 1):
-    num_arranjos *= i
+n = 10  # botoes disponiveis (0 a 9)
+r = 4   # botoes usados na senha
 
-print(num_arranjos)
+num_senhas = math.factorial(n) // math.factorial(n - r)
+
+print(num_senhas)
