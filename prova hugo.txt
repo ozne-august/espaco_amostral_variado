@@ -1,0 +1,782 @@
+Sim. Vou usar as imagens como base e transformar as questões em um material de estudo. Os exercícios trabalham principalmente:
+
+- `random`: experimentos aleatórios e distribuições.
+- `itertools.product`: combinações de escolhas.
+- `math.factorial`: permutações de elementos distintos.
+- `itertools.permutations`: ordem dos elementos.
+- Amostragem com pesos.
+- Distribuição normal.
+
+## Questão 1 — Tempo de entrega
+
+### Conceito
+
+A distribuição uniforme gera valores em um intervalo em que qualquer valor possui a mesma chance de ser escolhido.
+
+A função correta é:
+
+```python
+random.uniform(valor_minimo, valor_maximo)
+```
+
+### Código corrigido
+
+```python
+import random
+
+# Intervalo do tempo de entrega
+espaco_amostral = (10, 45)
+
+# Sorteia um valor entre 10 e 45
+resultado = random.uniform(*espaco_amostral)
+
+print(f"{resultado:.2f} minutos")
+```
+
+### Explicação
+
+```python
+espaco_amostral = (10, 45)
+```
+
+Armazena os limites inferior e superior do intervalo.
+
+```python
+random.uniform(*espaco_amostral)
+```
+
+O operador `*` desempacota a tupla:
+
+```python
+random.uniform(10, 45)
+```
+
+Sem o `*`, seria enviada uma única tupla para a função, causando erro.
+
+```python
+f"{resultado:.2f}"
+```
+
+Exibe o número com duas casas decimais.
+
+### Dica
+
+Sempre que uma função espera vários argumentos e você possui esses argumentos dentro de uma tupla ou lista, pense no desempacotamento com `*`.
+
+---
+
+## Questão 2 — Lançamento de um dado
+
+### Conceito
+
+Um dado possui seis resultados possíveis:
+
+$$
+S = \{1, 2, 3, 4, 5, 6\}
+$$
+
+Para verificar se um número é par:
+
+```python
+numero % 2 == 0
+```
+
+### Código corrigido
+
+```python
+import random
+
+# Valores possíveis de um dado
+espaco_amostral = range(1, 7)
+
+# Sorteia um resultado
+resultado = random.choice(espaco_amostral)
+
+if resultado % 2 == 0:
+    print(f"{resultado} é par")
+else:
+    print(f"{resultado} é ímpar")
+```
+
+### Erros principais
+
+```python
+range(1, 6)
+```
+
+Não inclui o número `6`. Em Python, o limite final de `range` não é incluído.
+
+Por isso usamos:
+
+```python
+range(1, 7)
+```
+
+Também é importante observar a lógica:
+
+- Resto `0`: número par.
+- Resto diferente de `0`: número ímpar.
+
+### Dica
+
+Para verificar divisibilidade:
+
+```python
+numero % divisor == 0
+```
+
+Exemplos:
+
+```python
+numero % 2 == 0  # par
+numero % 5 == 0  # divisível por 5
+```
+
+---
+
+## Questão 3 — Lançamento de três moedas
+
+### Conceito
+
+Cada moeda possui dois resultados:
+
+```python
+cara
+coroa
+```
+
+Como a moeda é lançada três vezes:
+
+$$
+2^3 = 8
+$$
+
+Existem oito sequências possíveis.
+
+### Código corrigido
+
+```python
+import random
+from itertools import product
+
+espaco_amostral = list(
+    product(["cara", "coroa"], repeat=3)
+)
+
+print(f"Tamanho de S: {len(espaco_amostral)}")
+
+resultado = random.choice(espaco_amostral)
+
+print(f"Resultado: {resultado}")
+```
+
+### Possibilidades geradas
+
+```python
+("cara", "cara", "cara")
+("cara", "cara", "coroa")
+("cara", "coroa", "cara")
+("cara", "coroa", "coroa")
+("coroa", "cara", "cara")
+("coroa", "cara", "coroa")
+("coroa", "coroa", "cara")
+("coroa", "coroa", "coroa")
+```
+
+### Erros principais
+
+```python
+repeat=2
+```
+
+Representaria apenas dois lançamentos. Para três moedas, usamos:
+
+```python
+repeat=3
+```
+
+Além disso, `product` retorna um iterador. Para poder usar `len`, precisamos convertê-lo para uma lista:
+
+```python
+list(product(...))
+```
+
+### Dica
+
+Use:
+
+```python
+product(opcoes, repeat=n)
+```
+
+quando uma mesma categoria é repetida várias vezes.
+
+Exemplos:
+
+- Lançar uma moeda 3 vezes.
+- Criar uma senha com caracteres.
+- Escolher cores para várias posições.
+
+---
+
+## Questão 4 — Combo de uma lanchonete
+
+### Conceito
+
+O combo possui:
+
+- 4 tipos de pão.
+- 5 tipos de recheio.
+- 3 tipos de bebida.
+
+Pelo princípio multiplicativo:
+
+$$
+4 \times 5 \times 3 = 60
+$$
+
+### Código corrigido
+
+```python
+from itertools import product
+
+lanche = {
+    "paes": 4,
+    "recheios": 5,
+    "bebidas": 3
+}
+
+espaco_amostral = list(
+    product(
+        range(lanche["paes"]),
+        range(lanche["recheios"]),
+        range(lanche["bebidas"])
+    )
+)
+
+print(f"Tamanho de S: {len(espaco_amostral)}")
+```
+
+Uma forma mais próxima da ideia de categorias seria:
+
+```python
+from itertools import product
+
+lanche = {
+    "paes": ["pao branco", "pao integral", "brioche", "frances"],
+    "recheios": ["queijo", "presunto", "frango", "carne", "vegetariano"],
+    "bebidas": ["agua", "suco", "refrigerante"]
+}
+
+espaco_amostral = list(product(*lanche.values()))
+
+print(f"Tamanho de S: {len(espaco_amostral)}")
+```
+
+### Erros principais
+
+```python
+product(lanche.keys())
+```
+
+Isso combina apenas as chaves do dicionário:
+
+```python
+"paes", "recheios", "bebidas"
+```
+
+O correto é combinar os valores:
+
+```python
+product(*lanche.values())
+```
+
+Também não devemos usar:
+
+```python
+len(lanche)
+```
+
+Isso retorna apenas a quantidade de categorias, que é `3`. O tamanho do espaço amostral é:
+
+```python
+len(espaco_amostral)
+```
+
+### Dica
+
+Ao trabalhar com dicionários:
+
+- `dicionario.keys()` retorna as chaves.
+- `dicionario.values()` retorna os valores.
+- `dicionario.items()` retorna chave e valor.
+
+---
+
+## Questão 5 — Livros em uma prateleira
+
+### Conceito
+
+Organizar cinco livros diferentes em uma fila é uma permutação simples:
+
+$$
+5! = 5 \times 4 \times 3 \times 2 \times 1 = 120
+$$
+
+### Código corrigido
+
+```python
+import math
+
+numero_livros = 5
+
+numero_maneiras = math.factorial(numero_livros)
+
+print(numero_maneiras)
+```
+
+### Erros principais
+
+```python
+numero_livros = "5"
+```
+
+O valor foi armazenado como texto. Para cálculos, deve ser um número:
+
+```python
+numero_livros = 5
+```
+
+Também é necessário chamar a função:
+
+```python
+math.factorial(numero_livros)
+```
+
+A forma abaixo está errada:
+
+```python
+math.factorial[numero_livros]
+```
+
+Colchetes são usados para acessar posições ou itens. Funções são chamadas com parênteses.
+
+### Dica
+
+Diferencie:
+
+```python
+lista[0]       # acesso a um item
+funcao(valor)  # chamada de função
+```
+
+---
+
+## Questão 6 — Pódio de uma corrida
+
+### Conceito
+
+Há sete corredores e três posições no pódio:
+
+- Primeiro lugar.
+- Segundo lugar.
+- Terceiro lugar.
+
+A ordem importa. Portanto, usamos permutação:
+
+$$
+P(7,3) = \frac{7!}{(7-3)!}
+$$
+
+Ou:
+
+$$
+7 \times 6 \times 5 = 210
+$$
+
+### Código corrigido
+
+```python
+import math
+from itertools import permutations
+
+corredores = [
+    "Ana",
+    "Bruno",
+    "Carla",
+    "Diego",
+    "Elisa",
+    "Fabio",
+    "Gabi"
+]
+
+numero_corredores = len(corredores)
+lugares_podio = 3
+
+numero_podios = math.perm(numero_corredores, lugares_podio)
+
+podios = list(permutations(corredores, lugares_podio))
+
+print(f"Número de pódios possíveis: {numero_podios}")
+print(f"Número de pódios gerados: {len(podios)}")
+```
+
+### Erros principais
+
+A função correta do módulo `itertools` é:
+
+```python
+permutations
+```
+
+No plural.
+
+Além disso, o cálculo deve ser uma permutação, não uma combinação, porque a ordem importa:
+
+```python
+math.perm(7, 3)
+```
+
+Na geração dos pódios, devemos usar `3`:
+
+```python
+permutations(corredores, 3)
+```
+
+Usar `n` geraria grupos com todos os sete corredores.
+
+### Dica
+
+Use esta pergunta:
+
+> A ordem altera o resultado?
+
+- Sim: permutação.
+- Não: combinação.
+
+Exemplo:
+
+- `Ana, Bruno, Carla` no pódio é diferente de `Bruno, Ana, Carla`.
+- Uma comissão com Ana, Bruno e Carla é igual independentemente da ordem.
+
+---
+
+## Questão 7 — Controle de qualidade
+
+### Conceito
+
+A fábrica possui:
+
+- 95% de lâmpadas boas.
+- 5% de lâmpadas defeituosas.
+
+Precisamos sortear 1000 lâmpadas respeitando esses pesos.
+
+### Código corrigido
+
+```python
+import random
+
+espaco_amostral = ["boa", "defeituosa"]
+pesos = [95, 5]
+
+amostra = random.choices(
+    espaco_amostral,
+    weights=pesos,
+    k=1000
+)
+
+defeituosas = amostra.count("defeituosa")
+
+print(
+    f"Defeituosas: {defeituosas} de 1000 "
+    f"({defeituosas / 10:.1f}%)"
+)
+```
+
+### Explicação
+
+```python
+weights=[95, 5]
+```
+
+Indica que:
+
+- `"boa"` possui peso 95.
+- `"defeituosa"` possui peso 5.
+
+```python
+k=1000
+```
+
+Indica que serão realizados 1000 sorteios.
+
+A porcentagem é calculada por:
+
+```python
+defeituosas / 1000 * 100
+```
+
+Como `1000 / 100 = 10`, também podemos escrever:
+
+```python
+defeituosas / 10
+```
+
+### Erros principais
+
+A função correta é:
+
+```python
+random.choices(...)
+```
+
+Com `s` no final, pois queremos vários sorteios.
+
+Também usamos:
+
+```python
+weights=pesos
+```
+
+e não `weight`.
+
+### Dica
+
+- `random.choice`: escolhe um único item.
+- `random.choices`: escolhe vários itens, podendo usar pesos.
+- `random.sample`: escolhe vários itens sem repetição.
+
+---
+
+## Questão 8 — Sorteio da Mega-Sena
+
+### Conceito
+
+A Mega-Sena sorteia seis números diferentes entre 1 e 60.
+
+Como não pode haver repetição, devemos usar amostragem sem reposição.
+
+### Código corrigido
+
+```python
+import random
+
+espaco_amostral = range(1, 61)
+
+resultado = random.sample(espaco_amostral, k=6)
+
+resultado.sort()
+
+print(resultado)
+```
+
+### Erros principais
+
+```python
+range(1, 60)
+```
+
+Não inclui o número `60`. O correto é:
+
+```python
+range(1, 61)
+```
+
+Além disso:
+
+```python
+random.choices(...)
+```
+
+permite repetição. Para números distintos, usamos:
+
+```python
+random.sample(...)
+```
+
+### Dica
+
+A diferença é essencial:
+
+```python
+random.choices([1, 2, 3], k=3)
+```
+
+Pode gerar:
+
+```python
+[1, 1, 3]
+```
+
+Já:
+
+```python
+random.sample([1, 2, 3], k=3)
+```
+
+gera todos diferentes:
+
+```python
+[2, 1, 3]
+```
+
+---
+
+## Questão 9 — Altura dos alunos
+
+### Conceito
+
+A altura segue aproximadamente uma distribuição normal com:
+
+- Média: `1.70`.
+- Desvio padrão: `0.08`.
+
+Uma distribuição normal é representada por:
+
+$$
+X \sim N(\mu, \sigma)
+$$
+
+Neste caso:
+
+$$
+X \sim N(1.70, 0.08)
+$$
+
+### Código corrigido
+
+```python
+import random
+
+media = 1.70
+desvio_padrao = 0.08
+
+for numero_aluno in range(1, 6):
+    altura = random.gauss(media, desvio_padrao)
+    print(f"Aluno {numero_aluno}: {altura:.2f} m")
+```
+
+### Erros principais
+
+A biblioteca `random` não possui uma função chamada `normal`.
+
+Podemos utilizar:
+
+```python
+random.gauss(media, desvio_padrao)
+```
+
+ou:
+
+```python
+random.normalvariate(media, desvio_padrao)
+```
+
+Também é necessário sortear uma nova altura dentro do `for`. Caso o sorteio fique fora do laço, a mesma altura será impressa cinco vezes.
+
+### Dica
+
+Se o experimento deve ocorrer várias vezes, a geração do valor aleatório normalmente fica dentro do laço:
+
+```python
+for ...:
+    resultado = sortear()
+```
+
+---
+
+## Questão 10 — Pedido em uma pizzaria
+
+### Conceito
+
+A pizzaria oferece:
+
+- 3 tamanhos.
+- 4 sabores.
+- 2 tipos de borda.
+
+Logo:
+
+$$
+3 \times 4 \times 2 = 24
+$$
+
+### Código corrigido
+
+```python
+import random
+from itertools import product
+
+pizza = {
+    "tamanhos": ["P", "M", "G"],
+    "sabores": ["calabresa", "mussarela", "frango", "portuguesa"],
+    "bordas": ["tradicional", "recheada"]
+}
+
+espaco_amostral = list(product(*pizza.values()))
+
+print(
+    f"Total de pizzas possíveis: "
+    f"{len(espaco_amostral)}"
+)
+
+resultado = random.choice(espaco_amostral)
+
+print(f"Pedido sorteado: {resultado}")
+```
+
+### Erros principais
+
+O produto deve receber cada conjunto de opções separadamente:
+
+```python
+product(*pizza.values())
+```
+
+O `*` transforma os valores do dicionário em argumentos separados:
+
+```python
+product(tamanhos, sabores, bordas)
+```
+
+Também devemos calcular o tamanho usando:
+
+```python
+len(espaco_amostral)
+```
+
+e não:
+
+```python
+len(pizza)
+```
+
+`len(pizza)` retornaria apenas `3`, porque existem três categorias.
+
+### Dica
+
+A Questão 10 usa exatamente a mesma ideia da Questão 4:
+
+> Quando cada escolha vem de uma categoria diferente e todas as combinações são possíveis, use o princípio multiplicativo ou `itertools.product`.
+
+## Resumo das funções importantes
+
+| Função | Uso |
+|---|---|
+| `random.uniform(a, b)` | Número real uniforme |
+| `random.choice(lista)` | Um item aleatório |
+| `random.choices(lista, weights, k)` | Vários itens, com possível repetição |
+| `random.sample(lista, k)` | Vários itens sem repetição |
+| `random.gauss(media, desvio)` | Número seguindo distribuição normal |
+| `itertools.product` | Combinações entre categorias |
+| `itertools.permutations` | Arranjos em que a ordem importa |
+| `math.factorial(n)` | Fatorial de um número |
+| `math.perm(n, r)` | Permutação de `r` elementos |
+| `range(inicio, fim)` | O `fim` não é incluído |
+
+A dica mais importante para esse conjunto é sempre verificar três coisas:
+
+1. O limite do `range` está incluindo todos os valores necessários?
+2. A ordem dos elementos importa?
+3. O sorteio permite ou não repetição?
